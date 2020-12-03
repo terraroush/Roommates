@@ -60,6 +60,8 @@ namespace Roommates
                         Console.Write("Press any key to continue");
                         Console.ReadKey();
                         break;
+                    case ("Do a chore"):
+                        break;
                     case ("Exit"):
                         runProgram = false;
                         break;
@@ -77,6 +79,7 @@ namespace Roommates
             "Show all rooms",
             "Search for room",
             "Add a room",
+            "Do a chore",
             "Exit"
         };
 
