@@ -7,7 +7,7 @@ namespace Roommates.Repositories
 {
     public class ChoreRepository : BaseRepository
     {
-        public List<Room> GetAll()
+        public List<Chore> GetAll()
         {
             using (SqlConnection conn = Connection)
             {
@@ -15,11 +15,11 @@ namespace Roommates.Repositories
                 
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT Id, Name, MaxOccupancy FROM Room";
+                    cmd.CommandText = "SELECT Id, Name FROM Chore";
 
                     SqlDataReader reader = cmd.ExecuteReader();
 
-                    List<Room> rooms = new List<Room>();
+                    List<Chore> chores = new List<Chore>();
 
                     while (reader.Read())
                     {
@@ -29,65 +29,59 @@ namespace Roommates.Repositories
                         int nameColumnPosition = reader.GetOrdinal("Name");
                         string nameValue = reader.GetString(nameColumnPosition);
 
-                        int maxOccupancyColumnPosition = reader.GetOrdinal("MaxOccupancy");
-                        int maxOccupancy = reader.GetInt32(maxOccupancyColumnPosition);
-
-                        Room room = new Room
+                        Chore chore = new Chore
                         {
                             Id = idValue,
                             Name = nameValue,
-                            MaxOccupancy = maxOccupancy,
-                        };
-                        rooms.Add(room);
+                                                  };
+                        chores.Add(chore);
                     }
                     reader.Close();
-                    return rooms;
+                    return chores;
                 }
 
             }
         }
-        public Room GetById(int id)
+        public Chore GetById(int id)
         {
             using (SqlConnection conn = Connection)
             {
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT Name, MaxOccupancy FROM Room WHERE Id = @id";
+                    cmd.CommandText = "SELECT Name FROM Chore WHERE Id = @id";
                     cmd.Parameters.AddWithValue("@id", id);
                     SqlDataReader reader = cmd.ExecuteReader();
 
-                    Room room = null;
+                    Chore chore = null;
 
                     if (reader.Read())
                     {
-                        room = new Room
+                        chore = new Chore
                         {
                             Id = id,
                             Name = reader.GetString(reader.GetOrdinal("Name")),
-                            MaxOccupancy = reader.GetInt32(reader.GetOrdinal("MaxOccupancy")),
                         };
                     }
                     reader.Close();
-                    return room;
+                    return chore;
                 }
             }
         }
-        public void Insert(Room room)
+        public void Insert(Chore chore)
         {
             using (SqlConnection conn = Connection)
             {
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"INSERT INTO Room (Name, MaxOccupancy)
+                    cmd.CommandText = @"INSERT INTO Chore (Name)
                                         OUTPUT INSERTED.Id
-                                        VALUES (@name, @maxOccupancy)";
-                    cmd.Parameters.AddWithValue("@name", room.Name);
-                    cmd.Parameters.AddWithValue("@maxOccupancy", room.MaxOccupancy);
+                                        VALUES (@name)";
+                    cmd.Parameters.AddWithValue("@name", chore.Name);
                     int id = (int)cmd.ExecuteScalar();
 
-                    room.Id = id;
+                    chore.Id = id;
                 }
             }
         }
