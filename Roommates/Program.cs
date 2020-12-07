@@ -42,6 +42,9 @@ namespace Roommates
                     case ("Add a chore"):
                         AddChore(choreRepo);
                         break;
+                    case ("Search for roommate"):
+                        ShowOneRoommate(roommateRepo);
+                        break;
                     case ("Exit"):
                         runProgram = false;
                         break;
@@ -49,6 +52,7 @@ namespace Roommates
             }
 
         }
+
         static void ShowAllRooms(RoomRepository roomRepo)
         {
             List<Room> rooms = roomRepo.GetAll();
@@ -88,10 +92,22 @@ namespace Roommates
 
             Chore chore = choreRepo.GetById(id);
 
-            Console.WriteLine($"{chore.Id} - {chore.Name})");
+            Console.WriteLine($"{chore.Id} - {chore.Name}");
             Console.Write("Press any key to continue");
             Console.ReadKey();
-            ;        }
+        }
+        static void ShowOneRoommate(RoommateRepository roommateRepo)
+        {
+            Console.Write("Roommate Id: ");
+            int id = int.Parse(Console.ReadLine());
+
+            Roommate roommate = roommateRepo.GetById(id);
+
+            Console.WriteLine($"{roommate.Id} - {roommate.Firstname} {roommate.Lastname} {roommate.RentPortion} {roommate.MovedInDate} {roommate.Room.Name}");
+            Console.Write("Press any key to continue");
+            Console.ReadKey();
+
+        }
 
         static void AddRoom(RoomRepository roomRepo)
         {
@@ -147,6 +163,7 @@ namespace Roommates
             "Show all chores",
             "Search for chore",
             "Add a chore",
+            "Search for roommate",
             "Exit"
         };
 
